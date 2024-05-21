@@ -715,3 +715,217 @@ char ch;
     }
 ```
 
+
+
+#### 5.6 嵌套循环和二维数组
+
+在C++中没有提供二维数组类型，但可以采用类似于下面的方式创建二维数组
+
+```c++
+int maxtemps[4][5]; // 创建了一个4行5列的二维数组
+```
+
+关于二维数组，要想明白其本质是数组的数组。明白了这一点就可以理解maxtemps[0]其实是一个地址
+
+```c++
+#include <iostream>
+#include <cxxabi.h>
+using namespace std;
+int main()
+{
+    int temp[4][5];
+    
+    cout<<temp[0]<<endl;
+    cout<<abi::__cxa_demangle(typeid(temp[0]).name(),0,0,0 )<<endl;
+}
+
+结果为：
+0x62fdd0
+int [5]
+```
+
+
+
+### 第六章  分支语句和逻辑运算符
+
+
+
+#### 6.2  逻辑表达式
+
+
+
+##### 6.2.5 逻辑运算符细节
+
+C++中逻辑OR和逻辑AND运算符的优先级都低于关系运算符，另一方面！运算符的优先级要高于所有的关系运算符和算数运算符。
+
+在逻辑AND和逻辑OR运算符中，AND运算符的优先级要高于OR，也就是说
+
+```c++
+age>30 && age<45 || weight>300
+
+被解释为：
+(age>30 && age<45) || weight>300
+```
+
+
+
+在C++中，&& 运算符可以写作and，||运算符可以写作or，！运算符可以写作not，这是等价的
+
+
+
+#### 6.3  字符库函数cctype
+
+C++从C语言中继承了一个与字符相关的软件包，可以简化确定字符是否为大小写、数字、标点符号等工作，这些函数的原型在cctype中定义。有检测是否为字母字符的isalpha()，是否为数字字符的isdigts()，是否为标点符号的ispunct()等函数构成。更详细的说明请参考表6.4中内容。
+
+
+
+#### 6.5  switch语句
+
+在C++中switch语句就像是一个指路牌，告诉计算机接下来应执行哪一行代码。执行switch语句的时候，程序将跳到使用integer-expression值标记的那一行。故名思义integer-expression必须是一个结果为整数值的表达式，最常见的标签是int和char常量，在之前我们了解了枚举，integer-expression也可以是枚举量。
+
+
+
+##### 6.5.1  将枚举量用作标签
+
+通常cin无法识别枚举标签，当switch语句将int值和枚举标签进行比较时，会将枚举量提升为int。
+
+
+
+#### 6.8  简单的文件输入/输出
+
+
+
+##### 6.8.2  写入到文本文件中
+
+文件输出和cout输出到控制台输出极为相似
+
+* 必须包含头文件fstream
+* 头文件fstream定义了一个用于处理输出的ofstream类
+* 需要声明一个或多个ofstream变量
+* 必须指明名称空间std
+* 需要将ofstream对象和文件关联起来，其中一种关联的方法是使用open
+* 在使用完文件后用close()方法将其关闭
+* 可结合使用ofstream对象和运算符<<来输出各种类型的数据
+
+下面是要求用户输入信息，将信息显示到屏幕上，再将信息写入到文件中的示例代码
+
+```c++
+#include <iostream>
+#include <fstream>
+
+int main()
+{
+    using namespace std;
+
+    char automobile[50];
+    int year;
+    double a_price;
+    double d_price;
+
+    ofstream outFile; //实例化一个用于输出的类outFile
+    outFile.open("carinfo.txt"); //将输出类和文件绑定起来
+
+    cout<<"Enter the make and model of automobile:";
+    cin.getline(automobile,50);
+
+    cout<<"Enter the model year:";
+    cin>>year;
+
+    cout<<"Enter the original asking price:";
+    cin>>a_price;
+
+    d_price=0.913*a_price;
+
+    // 输出到控制台上
+
+    cout<<fixed;
+    cout.precision(2); // 两者连用控制小数位数
+    cout.setf(ios_base::showpoint);
+    cout<<"Make and model:"<<automobile<<endl;
+    cout<<"Year:"<<year<<endl;
+    cout<<"Was asking $"<<a_price<<endl;
+    cout<<"Now asking $"<<d_price<<endl;
+
+    // 输出到文件中
+    outFile<<fixed;
+    outFile.precision(2);
+    outFile.setf(ios_base::showpoint);
+    outFile<<"Make and model:"<<automobile<<endl;
+    outFile<<"Year:"<<year<<endl;
+    outFile<<"Was asking $"<<a_price<<endl;
+    outFile<<"Now asking $"<<d_price<<endl;
+
+    outFile.close();
+    return 0;
+
+}
+```
+
+
+
+简单来说将文件输出的主要步骤如下：
+
+1. 实例化ofstream对象
+2. 将ofstream对象和一个文件关联起来（常见的方式是open）
+3. 像使用cout对象那样使用ofstream对象
+
+
+
+##### 6.8.3 读取文本文件
+
+在上个小节中我们已经初步掌握了怎么写入到文本文件中，读取文本文件的操作和写文本文件的操作大致类似：
+
+* 必须包含头文件ifstream
+* 实例化ifstream类的对象
+* 将ifstream对象和文件关联起来，常用的方式是使用open
+* 像使用cin一样使用ifstream对象
+
+
+
+### 第七章  函数——C++的编程模块
+
+
+
+#### 7.1  复习函数的基本知识
+
+要使用C++的函数，必须完成如下的工作：
+
+* 提供函数定义
+* 提供函数原型（可以理解为函数头）
+* 调用函数
+
+
+
+##### 7.1.1  定义函数
+
+对于有返回值的函数必须使用返回语句，C++对于返回值有一定的限制：**不能是数组**，但可以是其他任何类型——整数、浮点数、指针甚至可以是结构和对象。但有趣的是，虽然C++函数不能直接返回数组，但是**可以将数组作为结构和对象的组成部分来返回**。
+
+
+
+##### 7.1.2  函数原型和函数调用
+
+函数调用常常隐藏在include文件中，所以可能对函数原型并不是特别的熟悉，关于函数原型，可以从以下几个方面来理解：
+
+
+
+1. 为什么要使用函数原型：
+
+原型描述了函数到编译器的接口，将返回类型以及参数的类型和数量告诉编译器
+
+
+
+2. 函数原型的语法：
+
+函数原型是一条语句，最简单的方式就是复制函数头并在结尾添加分号。
+
+但是，函数类型不要求提供变量名，只需要有类型列表就足够了。同时函数原型中的变量名相当于占位符，**不必与函数定义中的变量名相同**。
+
+
+
+3. 函数原型的功能
+
+函数原型可以帮助编译器完成许多工作，其可以确保：
+
+* 编译器正确处理返回值
+* 编译器检查参数的数目和类型是否正确
+
