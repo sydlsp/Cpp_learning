@@ -1,10 +1,15 @@
 #include<iostream>
 using namespace std;
+
+typedef int* intp;
+
 int main()
 {
-    enum egg {small=100, medium, large};
+    int *a,b;
+    intp c,d;
 
-    egg choice=small;
-    cout<<choice<<endl;
+    cout<<typeid(a).name()<<endl;
+    cout<<typeid(b).name()<<endl;
+    cout<<typeid(c).name()<<endl;
+    cout<<typeid(d).name()<<endl;
 }
-
